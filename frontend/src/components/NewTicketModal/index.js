@@ -1,23 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
-
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
-
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Autocomplete, {
-	createFilterOptions,
-} from "@material-ui/lab/Autocomplete";
+import Autocomplete, { createFilterOptions } from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
 import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import ButtonWithSpinner from "../ButtonWithSpinner";
 import ContactModal from "../ContactModal";
 import toastError from "../../errors/toastError";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import { WhatsAppsContext } from "../../context/WhatsApp/WhatsAppsContext";
 import { Grid, ListItemText, MenuItem, Select } from "@material-ui/core";
 import { toast } from "react-toastify";
 
@@ -26,15 +22,16 @@ const filter = createFilterOptions({
 });
 
 const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
-
 	const [options, setOptions] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [searchParam, setSearchParam] = useState("");
 	const [selectedContact, setSelectedContact] = useState(null);
+	const [selectedConexao, setSelectedConexao] = useState("");
 	const [selectedQueue, setSelectedQueue] = useState("");
 	const [newContact, setNewContact] = useState({});
 	const [contactModalOpen, setContactModalOpen] = useState(false);
 	const { user } = useContext(AuthContext);
+	const { whatsApps } = useContext(WhatsAppsContext);
 
 	useEffect(() => {
 		if (initialContact?.id !== undefined) {
@@ -64,7 +61,20 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 			};
 
 			fetchContacts();
-		}, 500);
+
+			const fetchConexao = async () => {
+
+				try {
+					const { data } = await api.get(`/whatsapp`);
+					console.log(data)
+				} catch (err) {
+					toastError(err);
+				}
+			};
+			fetchConexao();
+		},
+		);
+
 		return () => clearTimeout(delayDebounceFn);
 	}, [searchParam, modalOpen]);
 
@@ -74,19 +84,27 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 		setSelectedContact(null);
 	};
 
-	const handleSaveTicket = async contactId => {
+	const handleSaveTicket = async (contactId) => {
 		if (!contactId) return;
-		if (selectedQueue === "" && user.profile !== 'admin') {
+		if (selectedQueue === "" && user.profile !== "admin") {
 			toast.error("Selecione uma fila");
+			return;
+		}
+		if (selectedConexao === "" && user.profile !== "admin") {
+			toast.error("Selecione uma conexão");
 			return;
 		}
 		setLoading(true);
 		try {
 			const queueId = selectedQueue !== "" ? selectedQueue : null;
+			const whatsappId = selectedConexao !== "" ? selectedConexao : null;
+			console.log(whatsappId)
+
 			const { data: ticket } = await api.post("/tickets", {
 				contactId: contactId,
 				queueId,
 				userId: user.id,
+				whatsappId: whatsappId, // Passe o ID da conexão selecionada
 				status: "open",
 			});
 			onClose(ticket);
@@ -95,6 +113,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 		}
 		setLoading(false);
 	};
+	console.log(handleSaveTicket)
 
 	const handleSelectOption = (e, newValue) => {
 		if (newValue?.number) {
@@ -109,7 +128,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 		setContactModalOpen(false);
 	};
 
-	const handleAddNewContactTicket = contact => {
+	const handleAddNewContactTicket = (contact) => {
 		handleSaveTicket(contact.id);
 	};
 
@@ -125,7 +144,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 		return filtered;
 	};
 
-	const renderOption = option => {
+	const renderOption = (option) => {
 		if (option.number) {
 			return `${option.name} - ${option.number}`;
 		} else {
@@ -133,7 +152,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 		}
 	};
 
-	const renderOptionLabel = option => {
+	const renderOptionLabel = (option) => {
 		if (option.number) {
 			return `${option.name} - ${option.number}`;
 		} else {
@@ -157,14 +176,14 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 						renderOption={renderOption}
 						filterOptions={createAddContactOption}
 						onChange={(e, newValue) => handleSelectOption(e, newValue)}
-						renderInput={params => (
+						renderInput={(params) => (
 							<TextField
 								{...params}
 								label={i18n.t("newTicketModal.fieldLabel")}
 								variant="outlined"
 								autoFocus
-								onChange={e => setSearchParam(e.target.value)}
-								onKeyPress={e => {
+								onChange={(e) => setSearchParam(e.target.value)}
+								onKeyPress={(e) => {
 									if (loading || !selectedContact) return;
 									else if (e.key === "Enter") {
 										handleSaveTicket(selectedContact.id);
@@ -185,10 +204,10 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 						)}
 					/>
 				</Grid>
-			)
+			);
 		}
 		return null;
-	}
+	};
 
 	return (
 		<>
@@ -230,6 +249,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 										return "Selecione uma fila"
 									}
 									const queue = user.queues.find(q => q.id === selectedQueue)
+									console.log("queue", user.queues)
 									return queue.name
 								}}
 							>
@@ -239,6 +259,46 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 											<ListItemText primary={queue.name} />
 										</MenuItem>
 									))}
+							</Select>
+						</Grid>
+						<Grid xs={12} item>
+							{/* Componente Select para a Conexão Selecionada */}
+							<Select
+								fullWidth
+								displayEmpty
+								variant="outlined"
+								value={selectedConexao}
+								onChange={(e) => {
+									setSelectedConexao(e.target.value);
+								}}
+								MenuProps={{
+									anchorOrigin: {
+										vertical: "bottom",
+										horizontal: "left",
+									},
+									transformOrigin: {
+										vertical: "top",
+										horizontal: "left",
+									},
+									getContentAnchorEl: null,
+								}}
+								renderValue={() => {
+									if (selectedConexao === "") {
+										return "Selecione uma conexão";
+									}
+									const conexaoData = whatsApps.find(
+										(con) => con.id === selectedConexao
+									);
+									return conexaoData.name;
+								}}
+							>
+								{whatsApps?.length > 0 &&
+									whatsApps.map((conexao, key) => (
+										<MenuItem dense key={key} value={conexao.id}>
+											<ListItemText primary={conexao.name} />
+										</MenuItem>
+									))}
+
 							</Select>
 						</Grid>
 					</Grid>

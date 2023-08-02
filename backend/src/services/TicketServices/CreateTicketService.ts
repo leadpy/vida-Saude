@@ -8,6 +8,7 @@ import { getIO } from "../../libs/socket";
 interface Request {
   contactId: number;
   status: string;
+  whatsappId?: number;
   userId: number;
   companyId: number;
   queueId?: number;
@@ -17,11 +18,17 @@ const CreateTicketService = async ({
   contactId,
   status,
   userId,
+  whatsappId,
   queueId,
   companyId
 }: Request): Promise<Ticket> => {
   const defaultWhatsapp = await GetDefaultWhatsApp(companyId);
-
+  let whatsappIdTicket = defaultWhatsapp.id
+  console.log("id", whatsappId)
+  if (!!whatsappId){
+    whatsappIdTicket = whatsappId;
+  }
+  console.log("def", whatsappIdTicket)
   await CheckContactOpenTickets(contactId);
 
   const { isGroup } = await ShowContactService(contactId, companyId);
@@ -34,7 +41,7 @@ const CreateTicketService = async ({
     defaults: {
       contactId,
       companyId,
-      whatsappId: defaultWhatsapp.id,
+      whatsappId: whatsappIdTicket,
       status,
       isGroup,
       userId
@@ -42,7 +49,7 @@ const CreateTicketService = async ({
   });
 
   await Ticket.update(
-    { companyId, queueId, userId, whatsappId: defaultWhatsapp.id, status: "open" },
+    { companyId, queueId, userId, whatsappId: whatsappIdTicket, status: "open" },
     { where: { id } }
   );
 
