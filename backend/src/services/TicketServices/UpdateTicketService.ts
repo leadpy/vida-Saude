@@ -72,7 +72,7 @@ const UpdateTicketService = async ({
     const oldQueueId = ticket.queueId;
 
     if (oldStatus === "closed") {
-      await CheckContactOpenTickets(ticket.contact.id);
+      await CheckContactOpenTickets(ticket.contact.id, ticket.whatsappId);
       // queueId = null;
       chatbot = null;
       queueOptionId = null;
