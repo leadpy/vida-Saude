@@ -29,14 +29,15 @@ const CreateTicketService = async ({
     whatsappIdTicket = whatsappId;
   }
   console.log("def", whatsappIdTicket)
-  await CheckContactOpenTickets(contactId);
+  await CheckContactOpenTickets(contactId, whatsappId);
 
   const { isGroup } = await ShowContactService(contactId, companyId);
 
   const [{ id }] = await Ticket.findOrCreate({
     where: {
       contactId,
-      companyId
+      companyId,
+      whatsappId
     },
     defaults: {
       contactId,

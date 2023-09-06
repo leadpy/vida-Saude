@@ -38,7 +38,7 @@ interface Response {
 const UpdateTicketService = async ({
   ticketData,
   ticketId,
-  companyId
+  companyId,
 }: Request): Promise<Response> => {
   try {
     const { status } = ticketData;
