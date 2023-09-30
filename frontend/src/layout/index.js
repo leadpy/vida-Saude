@@ -33,7 +33,7 @@ import logo from "../assets/logoPainelOption.png";
 import { socketConnection } from "../services/socket";
 import ChatPopover from "../pages/Chat/ChatPopover";
 
-const drawerWidth = 300;
+const drawerWidth = 260;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -119,6 +119,7 @@ const useStyles = makeStyles((theme) => ({
   },
   containerWithScroll: {
     flex: 1,
+    // backgroundColor: theme.transitions.backgroundColor
     padding: theme.spacing(1),
     overflowY: "scroll",
     ...theme.scrollbarStyles,

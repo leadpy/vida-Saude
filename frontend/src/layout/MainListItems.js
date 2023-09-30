@@ -36,6 +36,15 @@ import { socketConnection } from "../services/socket";
 import { isArray } from "lodash";
 import api from "../services/api";
 import toastError from "../errors/toastError";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme => ({
+  itemMenu: {
+    paddingTop: "3px",
+    paddingBottom: "3px",
+  }
+}));
+
 
 function ListItemLink(props) {
   const { icon, primary, to, className } = props;
@@ -115,6 +124,7 @@ const reducer = (state, action) => {
 };
 
 const MainListItems = (props) => {
+  const classes = useStyles();
   const { drawerClose } = props;
   const { whatsApps } = useContext(WhatsAppsContext);
   const { user } = useContext(AuthContext);
@@ -225,6 +235,7 @@ const MainListItems = (props) => {
             to="/"
             primary="Dashboard"
             icon={<DashboardOutlinedIcon />}
+            className={classes.itemMenu}
           />
         )}
       />
@@ -233,30 +244,35 @@ const MainListItems = (props) => {
         to="/tickets"
         primary={i18n.t("mainDrawer.listItems.tickets")}
         icon={<WhatsAppIcon />}
+        className={classes.itemMenu}
       />
 
       <ListItemLink
         to="/quick-messages"
         primary={i18n.t("mainDrawer.listItems.quickMessages")}
         icon={<FlashOnIcon />}
+        className={classes.itemMenu}
       />
 
       <ListItemLink
         to="/contacts"
         primary={i18n.t("mainDrawer.listItems.contacts")}
         icon={<ContactPhoneOutlinedIcon />}
+        className={classes.itemMenu}
       />
 
       <ListItemLink
         to="/schedules"
         primary={i18n.t("mainDrawer.listItems.schedules")}
         icon={<EventIcon />}
+        className={classes.itemMenu}
       />
 
       <ListItemLink
         to="/tags"
         primary={i18n.t("mainDrawer.listItems.tags")}
         icon={<LocalOfferIcon />}
+        className={classes.itemMenu}
       />
 
       <ListItemLink
@@ -267,12 +283,14 @@ const MainListItems = (props) => {
             <ForumIcon />
           </Badge>
         }
+        className={classes.itemMenu}
       />
 
       <ListItemLink
         to="/helps"
         primary={i18n.t("mainDrawer.listItems.helps")}
         icon={<HelpOutlineIcon />}
+        className={classes.itemMenu}
       />
 
       <Can
@@ -289,6 +307,7 @@ const MainListItems = (props) => {
                 <ListItem
                   button
                   onClick={() => setOpenCampaignSubmenu((prev) => !prev)}
+                  className={classes.itemMenu}
                 >
                   <ListItemIcon>
                     <EventAvailableIcon />
@@ -309,7 +328,7 @@ const MainListItems = (props) => {
                   unmountOnExit
                 >
                   <List component="div" disablePadding>
-                    <ListItem onClick={() => history.push("/campaigns")} button>
+                    <ListItem onClick={() => history.push("/campaigns")} button className={classes.itemMenu}>
                       <ListItemIcon>
                         <ListIcon />
                       </ListItemIcon>
@@ -317,6 +336,7 @@ const MainListItems = (props) => {
                     </ListItem>
                     <ListItem
                       onClick={() => history.push("/contact-lists")}
+                      className={classes.itemMenu}
                       button
                     >
                       <ListItemIcon>
@@ -327,6 +347,7 @@ const MainListItems = (props) => {
                     <ListItem
                       onClick={() => history.push("/campaigns-config")}
                       button
+                      className={classes.itemMenu}
                     >
                       <ListItemIcon>
                         <SettingsOutlinedIcon />
@@ -342,6 +363,7 @@ const MainListItems = (props) => {
                 to="/announcements"
                 primary={i18n.t("mainDrawer.listItems.annoucements")}
                 icon={<AnnouncementIcon />}
+                className={classes.itemMenu}
               />
             )}
             <ListItemLink
@@ -352,33 +374,39 @@ const MainListItems = (props) => {
                   <SyncAltIcon />
                 </Badge>
               }
+              className={classes.itemMenu}
             />
             <ListItemLink
               to="/queues"
               primary={i18n.t("mainDrawer.listItems.queues")}
               icon={<AccountTreeOutlinedIcon />}
+              className={classes.itemMenu}
             />
             <ListItemLink
               to="/users"
               primary={i18n.t("mainDrawer.listItems.users")}
               icon={<PeopleAltOutlinedIcon />}
+              className={classes.itemMenu}
             />
             <ListItemLink
               to="/messages-api"
               primary={i18n.t("mainDrawer.listItems.messagesAPI")}
               icon={<CodeRoundedIcon />}
+              className={classes.itemMenu}
             />
-              <ListItemLink
-                to="/financeiro"
-                primary={i18n.t("mainDrawer.listItems.financeiro")}
-                icon={<LocalAtmIcon />}
-              />
+            <ListItemLink
+              to="/financeiro"
+              primary={i18n.t("mainDrawer.listItems.financeiro")}
+              icon={<LocalAtmIcon />}
+              className={classes.itemMenu}
+            />
             <ListItemLink
               to="/settings"
               primary={i18n.t("mainDrawer.listItems.settings")}
               icon={<SettingsOutlinedIcon />}
+              className={classes.itemMenu}
             />
-{/*             <ListItemLink
+            {/*             <ListItemLink
               to="/subscription"
               primary="Assinatura"
               icon={<PaymentIcon />}

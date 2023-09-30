@@ -78,7 +78,7 @@ export function TagsContainer ({ ticket }) {
     }
 
     return (
-        <Paper style={{padding: 12}}>
+        // <Paper style={{padding: 12}}>
             <Autocomplete
                 multiple
                 size="small"
@@ -107,6 +107,6 @@ export function TagsContainer ({ ticket }) {
                     </Paper>
                 )}
             />
-        </Paper>
+        // </Paper>
     )
 }

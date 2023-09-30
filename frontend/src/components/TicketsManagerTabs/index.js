@@ -39,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
     borderBottomRightRadius: 0,
   },
 
+  marginTab: {
+    paddingTop: 0,
+    marginBottom: "-7px"
+  },
+
   tabsHeader: {
     flex: "none",
     backgroundColor: "#eee",
@@ -192,6 +197,7 @@ const TicketsManagerTabs = () => {
         <Tabs
           value={tab}
           onChange={handleChangeTab}
+          className={classes.marginTab}
           variant="fullWidth"
           indicatorColor="primary"
           textColor="primary"

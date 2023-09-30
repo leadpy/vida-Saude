@@ -16,7 +16,6 @@ import api from "../../services/api";
 import { ReplyMessageProvider } from "../../context/ReplyingMessage/ReplyingMessageContext";
 import toastError from "../../errors/toastError";
 import { AuthContext } from "../../context/Auth/AuthContext";
-import { TagsContainer } from "../TagsContainer";
 import { socketConnection } from "../../services/socket";
 
 const drawerWidth = 320;
@@ -177,9 +176,6 @@ const Ticket = () => {
           {renderTicketInfo()}
           <TicketActionButtons ticket={ticket}  onTicketUpdate={handleTicketUpdateTags}/>
         </TicketHeader>
-        <Paper>
-          <TagsContainer ticket={ticket} dataTags={tags} />
-        </Paper>
         <ReplyMessageProvider>{renderMessagesList()}</ReplyMessageProvider>
       </Paper>
       <ContactDrawer
@@ -188,6 +184,7 @@ const Ticket = () => {
         contact={contact}
         loading={loading}
         ticket={ticket}
+        tags={tags}
       />
     </div>
   );
