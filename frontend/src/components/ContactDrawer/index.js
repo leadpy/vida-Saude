@@ -20,6 +20,7 @@ import { CardHeader } from "@material-ui/core";
 import { ContactForm } from "../ContactForm";
 import ContactModal from "../ContactModal";
 import { ContactNotes } from "../ContactNotes";
+import { TagsContainer } from "../TagsContainer";
 
 const drawerWidth = 320;
 
@@ -43,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 		backgroundColor: "#eee",
 		alignItems: "center",
 		padding: theme.spacing(0, 1),
-		minHeight: "73px",
+		minHeight: "65px",
 		justifyContent: "flex-start",
 	},
 	content: {
@@ -85,7 +86,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) => {
+const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading, tags }) => {
 	const classes = useStyles();
 
 	const [modalOpen, setModalOpen] = useState(false);
@@ -126,7 +127,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 					<div className={classes.content}>
 						<Paper square variant="outlined" className={classes.contactHeader}>
 							<CardHeader
-								onClick={() => {}}
+								onClick={() => { }}
 								style={{ cursor: "pointer", width: '100%' }}
 								titleTypographyProps={{ noWrap: true }}
 								subheaderTypographyProps={{ noWrap: true }}
@@ -135,16 +136,16 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 									<>
 										<Typography onClick={() => setOpenForm(true)}>
 											{contact.name}
-											<CreateIcon style={{fontSize: 16, marginLeft: 5}} />
+											<CreateIcon style={{ fontSize: 16, marginLeft: 5 }} />
 										</Typography>
 									</>
 								}
 								subheader={
 									<>
-										<Typography style={{fontSize: 12}}>
+										<Typography style={{ fontSize: 12 }}>
 											<Link href={`tel:${contact.number}`}>{contact.number}</Link>
 										</Typography>
-										<Typography style={{fontSize: 12}}>
+										<Typography style={{ fontSize: 12 }}>
 											<Link href={`mailto:${contact.email}`}>{contact.email}</Link>
 										</Typography>
 									</>
@@ -154,14 +155,17 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 								variant="outlined"
 								color="primary"
 								onClick={() => setModalOpen(!openForm)}
-								style={{fontSize: 12}}
+								style={{ fontSize: 12 }}
 							>
 								{i18n.t("contactDrawer.buttons.edit")}
 							</Button>
 							{(contact.id && openForm) && <ContactForm initialContact={contact} onCancel={() => setOpenForm(false)} />}
 						</Paper>
 						<Paper square variant="outlined" className={classes.contactDetails}>
-							<Typography variant="subtitle1" style={{marginBottom: 10}}>
+							<TagsContainer ticket={ticket} dataTags={tags} />
+						</Paper>
+						<Paper square variant="outlined" className={classes.contactDetails}>
+							<Typography variant="subtitle1" style={{ marginBottom: 10 }}>
 								{i18n.t("ticketOptionsMenu.appointmentsModal.title")}
 							</Typography>
 							<ContactNotes ticket={ticket} />

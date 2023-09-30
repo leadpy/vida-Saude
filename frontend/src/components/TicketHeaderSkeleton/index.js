@@ -11,6 +11,10 @@ const useStyles = makeStyles(theme => ({
 		flex: "none",
 		borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
 	},
+	card: {
+		// paddingTop: theme.spacing(1),
+		marginBottom: "-7px"
+	},
 }));
 
 const TicketHeaderSkeleton = () => {
@@ -18,9 +22,10 @@ const TicketHeaderSkeleton = () => {
 
 	return (
 		<Card square className={classes.ticketHeader}>
-			<CardHeader
+ 			<CardHeader
 				titleTypographyProps={{ noWrap: true }}
 				subheaderTypographyProps={{ noWrap: true }}
+				className={classes.card}
 				avatar={
 					<Skeleton animation="wave" variant="circle">
 						<Avatar alt="contact_image" />
