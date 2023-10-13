@@ -84,7 +84,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 export const store = async (req: Request, res: Response): Promise<Response> => {
   const { contactId, status, userId, queueId, whatsappId }: TicketData = req.body;
   const { companyId } = req.user;
-  console.log("store", req.body)
+
   const ticket = await CreateTicketService({
     contactId,
     status,
