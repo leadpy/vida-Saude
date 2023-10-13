@@ -785,8 +785,6 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
       msgType === "viewOnceMessage" ||
       msgType === "documentWithCaptionMessage";
 
-    console.log('tipo', ifType)
-
     if (!ifType) {
       logger.warn(`#### Nao achou o type em isValidMsg: ${msgType}
 ${JSON.stringify(msg?.message)}`);

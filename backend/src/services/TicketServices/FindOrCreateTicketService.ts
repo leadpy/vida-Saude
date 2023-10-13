@@ -18,6 +18,7 @@ const FindOrCreateTicketService = async (
   companyId: number,
   groupContact?: Contact
 ): Promise<Ticket> => {
+
   let ticket = await Ticket.findOne({
     where: {
       status: {
@@ -65,7 +66,8 @@ const FindOrCreateTicketService = async (
   if (!ticket && !groupContact) {
     ticket = await Ticket.findOne({
       where: {
-        contactId: contact.id
+        contactId: contact.id,
+        whatsappId
       },
       order: [["updatedAt", "DESC"]]
     });
